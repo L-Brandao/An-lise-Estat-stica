@@ -1,0 +1,32 @@
+install.packages("dplyr")
+
+library(dplyr)
+library(readr)
+
+PelicanStores <- read_csv("D:/Documentos/Estudo/Acadêmico/2022.01 - Ciência de Dados (Big Data Processing 
+                          and Analytics)/C08v2 - Big Data Analytics - Análise Estatística/T01 - Intro/PelicanStores.csv")
+View(PelicanStores)
+
+str(PelicanStores)
+
+df_medias <- data.frame(Variaveis = c("Itens", "Vendas líquidas", "Idade"), Média = apply(PelicanStores[,c("Itens", "Vendas líquidas", "Idade")], 2, mean))
+df_medianas <- data.frame(Variaveis = c("Itens", "Vendas líquidas", "Idade"), Mediana = apply(PelicanStores[,c("Itens", "Vendas líquidas", "Idade")], 2, median))
+df_sd <- data.frame(Variaveis = c("Itens", "Vendas líquidas", "Idade"), DesvioPadrão = apply(PelicanStores[,c("Itens", "Vendas líquidas", "Idade")], 2, sd))
+df_var <- data.frame(Variaveis = c("Itens", "Vendas líquidas", "Idade"), Variância = apply(PelicanStores[,c("Itens", "Vendas líquidas", "Idade")], 2, var))
+
+df_1 <- left_join(df_medias, df_medianas, by = "Variaveis")
+df_2 <- left_join(df_1,df_sd, by = "Variaveis")
+df_3 <- left_join(df_2,df_var, by = "Variaveis")
+
+df_3
+
+getmod <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+df_mod <- data.frame(Variaveis = c("Itens", "Vendas líquidas", "Idade", "Tipo de Cliente", "Método de Pagamento", "Gênero", "Estado Civil")
+                     , Moda = apply(PelicanStores[,c("Itens", "Vendas líquidas", "Idade", "Tipo de Cliente", "Método de Pagamento", "Gênero", "Estado Civil")]
+                                    , 2, getmod))
+
+df_mod
